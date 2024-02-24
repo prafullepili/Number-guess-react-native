@@ -9,30 +9,57 @@ import { Ionicons } from "@expo/vector-icons";
 import { FlatList } from "react-native";
 import GuessLogItem from "../components/game/GuessLogItem";
 
+// function generateRandomBetween(min, max, exclude) {
+//   const rndNum = Math.floor(Math.random() * (max - min)) + min;
+//   if (rndNum === exclude) {
+//     return generateRandomBetween(min, max, exclude);
+//   } else {
+//     return rndNum;
+//   }
+// }
+
 function generateRandomBetween(min, max, exclude) {
   const rndNum = Math.floor(Math.random() * (max - min)) + min;
-  if (rndNum === exclude) {
-    return generateRandomBetween(min, max, exclude);
-  } else {
-    return rndNum;
-  }
+  return rndNum;
 }
+
 let minBoundary = 1;
 let maxBoundary = 100;
 
 export default function GameScreen({ userNumber, onGameOver }) {
-  const initialGuess = generateRandomBetween(1, 100, userNumber);
-  const [currentGuess, setCurrentGuess] = useState(initialGuess);
-  const [guessRounds, setGuessRounds] = useState([initialGuess]);
+  const [currentGuess, setCurrentGuess] = useState();
+  const [guessRounds, setGuessRounds] = useState([]);
 
   useEffect(() => {
     minBoundary = 1;
     maxBoundary = 100;
+    const initialGuess = generateRandomBetween(minBoundary, maxBoundary, userNumber);
+    setCurrentGuess(initialGuess);
+    setGuessRounds([initialGuess]);
+    console.log("Called generateRandom to set initialGuess number");
   }, []);
+
+  useEffect(() => {
+    if (currentGuess) {
+      setTimeout(() => {
+        if (currentGuess > userNumber) {
+          nextGuessHandler("lower");
+        } else {
+          nextGuessHandler("greater");
+        }
+      }, 2000);
+    }
+    // console.log("currentGuess--->", currentGuess);
+    // console.log("userNumber--->", userNumber);
+    // console.log(`min -> ${minBoundary} || max -> ${maxBoundary}`);
+    // console.log();
+    // console.log("-----------------------------------------------");
+  }, [currentGuess]);
 
   useEffect(() => {
     if (currentGuess === userNumber) {
       onGameOver(guessRounds.length);
+      console.log("Game Over");
     }
   }, [currentGuess, userNumber, onGameOver]);
 
@@ -59,9 +86,9 @@ export default function GameScreen({ userNumber, onGameOver }) {
   const guessRoundsListLength = guessRounds.length;
   return (
     <View style={styles.screen}>
-      <Title>Oppenent's Guess</Title>
+      <Title style={{ borderWidth: 0 }}>Oppenent's Guess</Title>
       <NumberContainer>{currentGuess}</NumberContainer>
-      <Card>
+      <Card style={{ marginBottom: 15 }}>
         <InstructionText style={styles.instructionText}>Higher or lower?</InstructionText>
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
@@ -78,6 +105,7 @@ export default function GameScreen({ userNumber, onGameOver }) {
       </Card>
       <View style={styles.listContainer}>
         <FlatList
+          style={{ marginVertical: 10, paddingHorizontal: 20 }}
           data={guessRounds}
           keyExtractor={(item) => item}
           renderItem={(itemData) => (
@@ -109,6 +137,5 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    padding: 16,
   },
 });

@@ -13,9 +13,9 @@ export default function GuessLogItem({ roundNumber, guess }) {
 const styles = StyleSheet.create({
   listItem: {
     borderColor: colors.primary800,
-    borderWidth: 1,
     borderRadius: 40,
-    padding: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 25,
     marginVertical: 8,
     backgroundColor: colors.accent500,
     flexDirection: "row",

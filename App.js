@@ -41,6 +41,7 @@ export default function App() {
   if (userNumber) {
     screen = <GameScreen userNumber={userNumber} onGameOver={gameOverHandler} />;
   }
+
   if (gameIsOver && userNumber) {
     screen = (
       <GameOverScreen
@@ -50,6 +51,7 @@ export default function App() {
       />
     );
   }
+
   return (
     <LinearGradient colors={[colors.primary700, colors.accent500]} style={styles.rootScreen}>
       <ImageBackground

@@ -11,7 +11,6 @@ export default function StartGameScreen({ onPickNumber }) {
   const [enteredNumber, setEnteredNumber] = useState("");
 
   function numberInputHandler(enteredText) {
-    console.log(enteredText);
     setEnteredNumber(enteredText);
   }
 
@@ -22,11 +21,9 @@ export default function StartGameScreen({ onPickNumber }) {
   function confirmInputHandler() {
     const chosenNumber = parseInt(enteredNumber);
     if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
-      Alert.alert(
-        "Invalid number!",
-        "Number has to be a number between 1 and 99.",
-        [{ text: "Okay", style: "default", onPress: resetInputHandler }]
-      );
+      Alert.alert("Invalid number!", "Number has to be a number between 1 and 99.", [
+        { text: "Okay", style: "default", onPress: resetInputHandler },
+      ]);
       return;
     }
 
@@ -46,6 +43,7 @@ export default function StartGameScreen({ onPickNumber }) {
           maxLength={2}
           onChangeText={numberInputHandler}
           value={enteredNumber}
+          autoFocus={true}
         />
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
