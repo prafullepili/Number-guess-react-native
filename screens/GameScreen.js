@@ -1,7 +1,7 @@
 import { View, StyleSheet, Alert, Text } from "react-native";
 import NumberContainer from "../components/game/NumberContainer";
 import Title from "../components/ui/Title";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Card from "../components/ui/Card";
 import InstructionText from "../components/ui/InstructionText";
@@ -26,7 +26,7 @@ function generateRandomBetween(min, max, exclude) {
 let minBoundary = 1;
 let maxBoundary = 100;
 
-export default function GameScreen({ userNumber, onGameOver }) {
+export default function GameScreen({ userNumber, onGameOver, auto, delay }) {
   const [currentGuess, setCurrentGuess] = useState();
   const [guessRounds, setGuessRounds] = useState([]);
 
@@ -40,14 +40,14 @@ export default function GameScreen({ userNumber, onGameOver }) {
   }, []);
 
   useEffect(() => {
-    if (currentGuess) {
+    if (currentGuess && auto) {
       setTimeout(() => {
         if (currentGuess > userNumber) {
           nextGuessHandler("lower");
         } else {
           nextGuessHandler("greater");
         }
-      }, 2000);
+      }, delay * 1000);
     }
     // console.log("currentGuess--->", currentGuess);
     // console.log("userNumber--->", userNumber);
@@ -88,21 +88,23 @@ export default function GameScreen({ userNumber, onGameOver }) {
     <View style={styles.screen}>
       <Title style={{ borderWidth: 0 }}>Oppenent's Guess</Title>
       <NumberContainer>{currentGuess}</NumberContainer>
-      <Card style={{ marginBottom: 15 }}>
-        <InstructionText style={styles.instructionText}>Higher or lower?</InstructionText>
-        <View style={styles.buttonsContainer}>
-          <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={() => nextGuessHandler("lower")}>
-              <Ionicons name="remove" size={24} color="white" />
-            </PrimaryButton>
+      {!auto && (
+        <Card style={{ marginBottom: 15 }}>
+          <InstructionText style={styles.instructionText}>Higher or lower?</InstructionText>
+          <View style={styles.buttonsContainer}>
+            <View style={styles.buttonContainer}>
+              <PrimaryButton onPress={() => nextGuessHandler("lower")}>
+                <Ionicons name="remove" size={24} color="white" />
+              </PrimaryButton>
+            </View>
+            <View style={styles.buttonContainer}>
+              <PrimaryButton onPress={() => nextGuessHandler("greater")}>
+                <Ionicons name="add" size={24} color="white" />
+              </PrimaryButton>
+            </View>
           </View>
-          <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={() => nextGuessHandler("greater")}>
-              <Ionicons name="add" size={24} color="white" />
-            </PrimaryButton>
-          </View>
-        </View>
-      </Card>
+        </Card>
+      )}
       <View style={styles.listContainer}>
         <FlatList
           style={{ marginVertical: 10, paddingHorizontal: 20 }}
