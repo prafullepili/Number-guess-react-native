@@ -1,4 +1,13 @@
-import { TextInput, View, StyleSheet, Alert, Switch, Text } from "react-native";
+import {
+  TextInput,
+  View,
+  StyleSheet,
+  Alert,
+  Switch,
+  Text,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { useState } from "react";
 import Colors from "../constants/colors";
@@ -46,54 +55,58 @@ export default function StartGameScreen({ onPickNumber, auto, setAuto, delay, se
   }
 
   return (
-    <View style={styles.rootContainer}>
-      <Title>Guess My Number</Title>
-      <View style={styles.decisionContainer}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={{ fontSize: 20 }}>Auto Give Hint</Text>
-          <Switch
-            trackColor={{ false: "#767577", true: "green" }}
-            thumbColor={auto ? "#f4f3f4" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={auto}
-          />
-        </View>
-        {auto && (
-          <View style={{ flexDirection: "row", alignItems: "baseline", gap: 10 }}>
-            <Text style={{ fontSize: 20 }}>Delay : </Text>
+    <ScrollView>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
+        <View style={styles.rootContainer}>
+          <Title>Guess My Number</Title>
+          <View style={styles.decisionContainer}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ fontSize: 20 }}>Auto Give Hint</Text>
+              <Switch
+                trackColor={{ false: "#767577", true: "green" }}
+                thumbColor={auto ? "#f4f3f4" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={auto}
+              />
+            </View>
+            {auto && (
+              <View style={{ flexDirection: "row", alignItems: "baseline", gap: 10 }}>
+                <Text style={{ fontSize: 20 }}>Delay : </Text>
+                <TextInput
+                  keyboardType="number-pad"
+                  value={delay}
+                  onChangeText={delayChangeHandler}
+                  style={styles.delayInput}
+                />
+                <Text style={{ fontSize: 20 }}>seconds</Text>
+              </View>
+            )}
+          </View>
+          <Card>
+            <InstructionText>Enter a number</InstructionText>
             <TextInput
+              style={styles.numberInput}
               keyboardType="number-pad"
-              value={delay}
-              onChangeText={delayChangeHandler}
-              style={styles.delayInput}
+              autoCapitalize="none"
+              autoCorrect={false}
+              maxLength={2}
+              onChangeText={numberInputHandler}
+              value={enteredNumber}
+              autoFocus={true}
             />
-            <Text style={{ fontSize: 20 }}>seconds</Text>
-          </View>
-        )}
-      </View>
-      <Card>
-        <InstructionText>Enter a number</InstructionText>
-        <TextInput
-          style={styles.numberInput}
-          keyboardType="number-pad"
-          autoCapitalize="none"
-          autoCorrect={false}
-          maxLength={2}
-          onChangeText={numberInputHandler}
-          value={enteredNumber}
-          autoFocus={true}
-        />
-        <View style={styles.buttonsContainer}>
-          <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
-          </View>
-          <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton>
-          </View>
+            <View style={styles.buttonsContainer}>
+              <View style={styles.buttonContainer}>
+                <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
+              </View>
+              <View style={styles.buttonContainer}>
+                <PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton>
+              </View>
+            </View>
+          </Card>
         </View>
-      </Card>
-    </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
